@@ -29,6 +29,10 @@ php artisan migrate
 php artisan serve
 ```
 
+## Usage
+
+Check [docs.md](docs.md) for a step by step guide on how to use plandash.
+
 ## API Endpoints
 
 Access the API endpoints to perform CRUD operations on tasks. Here are the basic endpoints:
