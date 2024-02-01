@@ -1,8 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
-use App\Http\Controllers\HomeController;
+use App\Http\Controllers\TaskController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -14,12 +13,13 @@ use App\Http\Controllers\HomeController;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
-
-Route::get('/home', [HomeController::class, 'index'])->name('home');
-
-Route::get('/about', function(){
-    return view('about');
+Route::get('/', function () {
+    return view('welcome');
 });
-
-// Auth::routes();
+Route::get('/api', function () {
+    return view('api');
+});
+Route::get('tasks/completed', [taskController::class, 'completed']);
+Route::get('tasks/incomplete', [taskController::class, 'incomplete']);
+Route::resource('tasks', taskController::class);
+Route::put('tasks/{id}/status', [taskController::class, 'updateStatus']);

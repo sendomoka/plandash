@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Models\Task;
 use Illuminate\Http\Request;
-use Illuminate\Validation\Rule;
 
 class TaskController extends Controller
 {
@@ -13,8 +12,14 @@ class TaskController extends Controller
      */
     public function index()
     {
-        $tasks = Task::all();
-        return response($tasks, 200);
+        $data = Task::all();
+        return view('tasks.index', compact('data'));
+    }
+
+    public function indexApi()
+    {
+        $api = Task::all();
+        return response($api, 200);
     }
 
     /**
@@ -22,7 +27,7 @@ class TaskController extends Controller
      */
     public function create()
     {
-        //
+        return view('tasks.create');
     }
 
     /**
@@ -30,64 +35,115 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
+        $request->validate([
             'title' => 'required',
-            'description' => 'required',
-            'status' => Rule::in(['completed', 'incomplete']),
+            'description' => 'required'
         ]);
-        $task = Task::create($validated);
-        return response($task, 201);
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+        ];
+        Task::create($data);
+        return redirect()->to('tasks')->with('success', 'Task created successfully');
+    }
+
+    public function storeApi(Request $request)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description,
+        ];
+        Task::create($data);
+        return response($data, 201);
     }
 
     /**
      * Display the specified resource.
      */
-    public function show($id)
+    public function show(string $id)
     {
-        $task = Task::findOrFail($id);
-        return response($task, 200);
+        $data = Task::where('id', $id)->get();
+        return view('tasks.index', compact('data'));
+    }
+
+    public function showApi(string $id)
+    {
+        $api = Task::where('id', $id)->get();
+        return response($api, 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Task $task)
+    public function edit(string $id)
     {
-        //
+        $data = Task::where('id', $id)->first();
+        return view('tasks.edit', compact('data'));
     }
 
     /**
      * Update the specified resource in storage.
      */
-    public function update($id, Request $request)
+    public function update(Request $request, string $id)
     {
-        $task = Task::findOrFail($id);
-        $validated = $request->validate([
-            'title' => 'sometimes|required',
-            'description' => 'sometimes|required',
-            'status' => Rule::in(['completed', 'incomplete']),
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
         ]);
-        $task->update($validated);
-        return response($task, 200);
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description
+        ];
+        Task::where('id', $id)->update($data);
+        return redirect()->to('tasks')->with('success', 'Task updated successfully');
+    }
+
+    public function updateApi(Request $request, string $id)
+    {
+        $request->validate([
+            'title' => 'required',
+            'description' => 'required'
+        ]);
+        $data = [
+            'title' => $request->title,
+            'description' => $request->description
+        ];
+        Task::where('id', $id)->update($data);
+        return response($data, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      */
-    public function destroy($id)
+    public function destroy(string $id)
     {
-        $task = Task::findOrFail($id);
-        $task->delete();
+        Task::where('id', $id)->delete();
+        return redirect()->to('tasks')->with('success', 'Task deleted successfully');
+    }
+
+    public function destroyApi(string $id)
+    {
+        Task::where('id', $id)->delete();
         return response(null, 204);
     }
 
     /**
      * Mark the specified resource as complete.
      */
-    public function complete()
+    public function completed()
     {
-        $tasks = Task::where('status', 'completed')->get();
-        return response($tasks, 200);
+        $data = Task::where('status', '=', 'Completed')->get();
+        return view('tasks.index', compact('data'));
+    }
+
+    public function completedApi()
+    {
+        $api = Task::all();
+        return response($api, 200);
     }
 
     /**
@@ -95,17 +151,31 @@ class TaskController extends Controller
      */
     public function incomplete()
     {
-        $tasks = Task::where('status', 'incomplete')->get();
-        return response($tasks, 200);
+        $data = Task::where('status', '=', 'Incomplete')->get();
+        return view('tasks.index', compact('data'));
     }
 
-    public function updateStatus($id, Request $request)
+    public function incompleteApi()
     {
-        $task = Task::findOrFail($id);
-        $validated = $request->validate([
-            'status' => Rule::in(['completed', 'incomplete']),
-        ]);
-        $task->update($validated);
-        return response($task, 200);
+        $api = Task::where('status', '=', 'Incomplete')->get();
+        return response($api, 200);
+    }
+
+    public function updateStatus(Request $request, string $id)
+    {
+        $data = [
+            'status' => $request->input('status')
+        ];
+        Task::where('id', $id)->update($data);
+        return redirect()->to('tasks')->with('success', 'Task status updated successfully');
+    }
+
+    public function updateStatusApi(Request $request, string $id)
+    {
+        $data = [
+            'status' => $request->input('status')
+        ];
+        Task::where('id', $id)->update($data);
+        return response($data, 200);
     }
 }

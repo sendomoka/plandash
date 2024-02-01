@@ -14,19 +14,14 @@ class TaskSeeder extends Seeder
     {
         $tasks = [
             [
-                'title' => 'Belajar Laravel',
-                'description' => 'Belajar framework Laravel 9 dari dasar',
-                'status' => 'incomplete'
+                'title' => 'Quiz Data Mining',
+                'description' => 'Prepare for the data mining quiz',
+                'status' => 'Completed'
             ],
             [
-                'title' => 'Belajar VueJS',
-                'description' => 'Belajar framework javascript VueJS',
-                'status' => 'incomplete'
-            ],
-            [
-                'title' => 'Kerjakan Tugas',
-                'description' => 'Mengerjakan tugas akhir semester',
-                'status' => 'completed'
+                'title' => 'Learn Laravel',
+                'description' => 'Learn Laravel framework from scratch',
+                'status' => 'Incomplete'
             ]
         ];
 

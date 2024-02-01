@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->text('description');
-            $table->enum('status', ['completed','incomplete'])->default('incomplete');
+            $table->string('status')->default('Incomplete');
             $table->timestamps();
         });
     }
