@@ -2,6 +2,8 @@
 
 **plandash** is a simple Laravel API for basic task management, allowing you to perform CRUD operations on tasks.
 
+![demo](public/screenshots/demo_plandash.gif){height="700"}
+
 ## Getting Started
 
 To get started with plandash, follow these steps:
